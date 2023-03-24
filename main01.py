@@ -1,3 +1,10 @@
+"""
+Para el correcto funcionamiento de este algoritmo se requiere tener la libreria 'requests':
+
+pip install requests
+
+"""
+
 import requests
 from datetime import datetime
 
