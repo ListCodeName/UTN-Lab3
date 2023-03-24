@@ -17,7 +17,7 @@ r = requests.get('https://www.frcon.utn.edu.ar/galileo/downld02.txt')
 
 #Obtener la temperatura y la fecha de la ultima medición
 aux = r.text.split("\r\n")
-print("\nCantidad de mediciones: "+str(len(aux)-3))
+print("\nCantidad de mediciones: "+str(len(aux)-4))
 medicion = aux[len(aux)-2].split()
 
 print("\nUltima medición "+str(medicion[0])+" a las "+str(medicion[1])+" hrs  \nLa temperatura actual es: " + str(medicion[2]) +"ºC")
@@ -33,3 +33,20 @@ print("\nHora actual: "+ str(datetime.now())+"\nDiferencia de "+ str(a))
 if(int(str(a).split(":")[1]) > 5):
     print("\nDato desactualizado")
 
+#Obtener media, máxima y mínima de temperaturas registradas
+media, max, min, cont = 0,0,0,0
+current = ""
+for x in aux:
+    if(cont < 3):
+        cont +=1
+        continue
+    try:
+        current = x.split()[2]
+        media += float(current)
+        if(min > float(current) or min == 0):
+            min = float(current)
+        if(max < float(current) or min == 0):
+            max = float(current)
+    except:
+        print("\n")
+print("Temperatura máxima: "+str(max)+"\nTemperatura mínima: "+str(min)+"\nTemperatura media: "+str(media/(len(aux)-4)))
