@@ -7,7 +7,7 @@ import threading
 
 def cliente():
     # Configuración del cliente
-    host = '192.168.1.6'
+    host = socket.gethostname()
     port = 8080
     print("***Bienvenido al sistema de atención meteorológica***")
     while True:
@@ -29,14 +29,16 @@ def cliente():
 
         # Cierre del socket
         if message == "exit":
+            print("Finalizando sesión cliente.")
             client_socket.close()
+            break
 
 def servidor():
     server = socket.socket(family = socket.AF_INET, type=socket.SOCK_STREAM)
-    server.bind(("192.168.1.6",8080))
+    server.bind((socket.gethostname(),8080))
 
     server.listen(2)
-
+    data = None
 
     while True:
         connection, address = server.accept()
@@ -44,11 +46,14 @@ def servidor():
                 data = connection.recv(1024)
                 #print('Entry: {0}'.format(data))
                 if data:
-                    print('Enviando de regreso los dato al cliente')
+                    print('TODO request')
                     connection.sendall(data)
                 else:
-                    print('No hay mas datos de', address)
                     break
+        print(str(format(data)))
+        if str(format(data))=="exit":
+             print("Finalizando sesión servidor.")
+             break
 
 # creamos el hilo del servidor y ejecutamos
 servThread = threading.Timer(1,function=servidor)
