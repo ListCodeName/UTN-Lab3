@@ -52,6 +52,8 @@ def servidor():
                 data = connection.recv(1024).decode("UTF-8")
                 if(format(data) != ""):
                     last = format(data)
+                    if(last == "exit"):
+                        break
                 #print('Entry: {0}'.format(data))
                 if data:
                     connection.sendall(consultaTiempo(format(data)).encode("UTF-8"))
