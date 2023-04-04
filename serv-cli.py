@@ -1,11 +1,14 @@
 """
 Conectarse al servidor meteorológico Galileo Galilei y obtener los datos que el cliente solicita.
+Efectuada una consulta, no se pueden hacer peticiones al servidor durante 5 minutos.
 """
 
 import socket
 import threading
 import requests
 from datetime import datetime
+
+#Tiempo de la ultima petición y ultima medición obtenida
 
 def cliente():
     # Configuración del cliente
@@ -51,7 +54,7 @@ def servidor():
                     last = format(data)
                 #print('Entry: {0}'.format(data))
                 if data:
-                    connection.sendall(consultaTiempo(data).encode("UTF-8"))
+                    connection.sendall(consultaTiempo(format(data)).encode("UTF-8"))
                 else:
                     break
         if last=="exit":
@@ -59,38 +62,31 @@ def servidor():
             break
 
 def consultaTiempo(texto):
-    respuesta = None
-    if(texto == "clima"):
-        if(actualizar):
-            print("\nUltima medición "+str(medicion[0])+" a las "+str(medicion[1])+" hrs  \nLa temperatura actual es: " + str(medicion[2]) +"ºC")
-
-            
+    respuesta = ""
+    valor = 0
+    try:
+        valor = datetime.now()-int(str(lastRequest).split(":")[1])
+    except:
+        valor = 10
+    if valor > 5:
+        if(texto == "clima"):
+            lastRequest = datetime.now()
+            medicion = galileoReq()
+            respuesta = "\nUltima medición "+str(medicion[0])+" a las "+str(medicion[1])+" hrs  \nLa temperatura actual es: " + str(medicion[2]) +"ºC"
+        else:
+            respuesta = "El servidor no reconoce su petición."
+    else:
+        respuesta = "El tiempo transcurrido desde la ultima consulta es menor a 5 minutos."
     return respuesta
 
-def actualizar():
-    try:
-        #Calculo del tiempo transcurrido desde la ultima medición y la fecha actual 
-        dia = medicion[0].split("/")
-        hora = medicion[1].split(":")
-
-        a = datetime.now() - datetime(int("20"+str(dia[2])), int(dia[1]), int(dia[0]), int(hora[0]), int(hora[1]), 0)
-        #En caso de que los minutos pasados de la ultima medición sean mayor a 5 se mostrará un mensaje
-        if(int(str(a).split(":")[1]) > 5):
-            pedido()
-            return True
-        else:
-            return False
-    except:
-        pedido()
-        return True
-
-def pedido():
+def galileoReq():
     req = requests.get('https://www.frcon.utn.edu.ar/galileo/downld02.txt')
     aux = req.text.split("\r\n")
-    medicion = aux[len(aux)-2].split()
+    return aux[len(aux)-2].split()
 
-req = None
-medicion = None
+lastRequest = datetime.now()
+medicion = ""
+
 # creamos el hilo del servidor y ejecutamos
 servThread = threading.Timer(1,function=servidor)
 servThread.start() 
