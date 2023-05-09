@@ -16,3 +16,8 @@ actualizar_estado_tarea(tarea_id: int, estado: str): Actualiza el estado de una 
 eliminar_tarea(tarea_id: int): Elimina una tarea de la base de datos según su ID.
 traer_todas_tareas() -> List[Tarea]: Obtiene todas las tareas de la base de datos y devuelve una lista de instancias de la clase Task.
 """
+
+from adm import Admin
+from task import Task
+
+adm = Admin()

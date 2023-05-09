@@ -1,12 +1,7 @@
 import random
 import datetime
 class Task:
-    __pid = 0
-    __estado = 0
-    __nombre = ""
-    __fecInicio = None
-    __ultMod = None
-
+   
     def __init__ (self,nombre, pid):
         self.__estado = 1
         self.__nombre = nombre
@@ -20,6 +15,9 @@ class Task:
 
     def __str__(self):
         return f"{self.__pid} - {self.__nombre} - Status: {self.__calcularEstado()} - Ultima modificación: {self.__calcularModificacion()}"
+
+    def toDic(self):
+        return "{"+f"'pid':'{__pid}','nombre':'{__nombre}', 'estado':'{__estado}','fecInicio':'{__fecInicio}','ultMod':'{__ultMod}'"+"}"
 
     def __calcularEstado(self)-> str:
         if(self.__pid == -1):

@@ -7,32 +7,37 @@ traer_todas_tareas() -> List[Tarea]: Obtiene todas las tareas de la base de dato
 """
 from task import Task
 import random
+from tinydb import TinyDB, Query
+
 class Admin:
     listaDeTareas = []
 
     def __init__(self):
-        pass
+        Admin.__cargarLista(self)
+        
 
     def addTask(self, nombre):
         nuevoPid = 1
         flag = True
         while(flag):
             flag = False
-            for x in self.listaDeTareas:
+            for x in listaDeTareas:
                 if( nuevoPid == Task(x).getPid()):
                     nuevoPid = random.randint(1,1000)
                     flag = True
                     break
-        self.listaDeTareas.append(Task(nombre, nuevoPid))
+        nuevaTarea = Task(nombre, nuevoPid)
+        Admin.listaDeTareas.append(nuevaTarea)
+        __cargarLista(nuevaTarea)
             
     def getTask(self, pid)->Task:
-        for x in self.listaDeTareas:
+        for x in listaDeTareas:
             if(pid == Task(x).getPid()):
                 return x
 
     def statusUpdate(self, pid, estado)->Exception:
         aux = None
-        for x in self.listaDeTareas:
+        for x in listaDeTareas:
             if( pid == Task(x).getPid()):
                 aux = x
                 break
@@ -44,20 +49,30 @@ class Admin:
 
 
     def eliminarTarea(self, pid):
-        for x in self.listaDeTareas:
+        for x in listaDeTareas:
             if(pid == Task(x).getPid()):
                 self.__deleteElement(x)
-                self.listaDeTareas.remove(x)
+                listaDeTareas.remove(x)
 
 
     def taskList(self):
-        return self.listaDeTareas
+        return listaDeTareas
     
     def __cargarLista(self):
-        pass #tinidb cargar elementos a la lista
+        db = TinyDB('db.json')
+        result = db.all()
+        print(result)
+
+    def __insertarTarea(self, tarea):
+        db = TinyDB('db.json')
+        #db.insert({'nombre': 'Juan', 'edad': 25})
+        db.insert(Task.toDic(self))
 
     def __deleteElement(self, element):
+        db = TinyDB('db.json')
+        #
         pass #tinidb eliminar elemento
 
     def __updateElement(self, element):
+        db = TinyDB('db.json')
         pass #tinidb actualizar
