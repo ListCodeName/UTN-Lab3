@@ -1,34 +1,56 @@
-import random
 import datetime
+
+#Crea una clase Tarea que tenga las siguientes propiedades: id, titulo, descripción, estado, creada y actualizada.
+
 class Task:
    
-    def __init__ (self,nombre, pid):
-        self.__estado = 1
-        self.__nombre = nombre
+    def __init__ (self, pid, nombre, estado,fecInicio, ultMod):
         self.__pid = pid
-        self.__fecInicio = datetime.datetime.now()
-        self.__ultMod = datetime.datetime.now()
-    
+        self.__nombre = nombre
+        if(estado != None):
+            self.__estado = estado
+        else:
+            self.__estado = 0
+        
+        if(fecInicio == None):
+            self.__fecInicio = datetime.datetime.now()
+        else:
+            self.__fecInicio = datetime.datetime.strptime(fecInicio, "%d-%m-%Y %H:%M:%S")
+        
+        if(ultMod == None):
+            self.__ultMod = datetime.datetime.now()
+        else:
+            self.__ultMod = datetime.datetime.strptime(ultMod, "%d-%m-%Y %H:%M:%S")
+
     def cambiarEstado (self, estado):
         self.__estado = estado
         self.__ultMod = datetime.datetime.now()
 
-    def __str__(self):
+    def __str__(self)-> str:
         return f"{self.__pid} - {self.__nombre} - Status: {self.__calcularEstado()} - Ultima modificación: {self.__calcularModificacion()}"
 
-    def toDic(self):
-        return "{"+f"'pid':'{__pid}','nombre':'{__nombre}', 'estado':'{__estado}','fecInicio':'{__fecInicio}','ultMod':'{__ultMod}'"+"}"
+    def toDic(self)->dict:
+        return {
+            'pid':self.__pid,
+            'nombre':self.__nombre,
+            'estado': self.__estado,
+            'fecInicio': self.__fecInicio.strftime("%d-%m-%Y %H:%M:%S"),
+            'ultMod':self.__ultMod.strftime("%d-%m-%Y %H:%M:%S")
+            }
 
     def __calcularEstado(self)-> str:
-        if(self.__pid == -1):
+        if(self.__estado == -1):
             return "Dormido"
-        if(self.__pid == 0):
+        elif(self.__estado == 0):
             return "Listo"
-        if(self.__pid == 1):
+        else:
             return "En ejecución"
     
     def __calcularModificacion(self)->str:
-        minutos = self.__ultMod - self.__fecInicio
+        timestamp = str(self.__ultMod - self.__fecInicio) #0:00:00.002423
+        artimestamp = timestamp.split(":")
+        minutos = int(artimestamp[0])*60 + int(artimestamp[1])
+        print (minutos)
         if(minutos < 60):
             return f"{minutos} mins"
         else:
@@ -36,3 +58,9 @@ class Task:
     
     def getPid(self)->int:
         return self.__pid
+    
+    def getNombre(self)->str:
+        return self.__nombre
+    
+    def getEstado(self)->int:
+        return self.__estado
