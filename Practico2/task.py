@@ -4,9 +4,11 @@ import datetime
 
 class Task:
    
-    def __init__ (self, pid, nombre, estado,fecInicio, ultMod):
+    def __init__ (self, pid, nombre, estado, descripcion, fecInicio, ultMod):
         self.__pid = pid
         self.__nombre = nombre
+        self.__descripcion = descripcion
+
         if(estado != None):
             self.__estado = estado
         else:
@@ -21,10 +23,6 @@ class Task:
             self.__ultMod = datetime.datetime.now()
         else:
             self.__ultMod = datetime.datetime.strptime(ultMod, "%d-%m-%Y %H:%M:%S")
-
-    def cambiarEstado (self, estado):
-        self.__estado = estado
-        self.__ultMod = datetime.datetime.now()
 
     def __str__(self)-> str:
         return f"{self.__pid} - {self.__nombre} - Status: {self.__calcularEstado()} - Ultima modificación: {self.__calcularModificacion()}"
@@ -55,7 +53,26 @@ class Task:
             return f"{minutos} mins"
         else:
             return f"{int(minutos/60)} hrs"
+        
+        
     
+
+    #setters
+    def cambiarEstado (self, estado):
+        self.__estado = estado
+        self.__ultMod = datetime.datetime.now()
+    
+    def setNombre(self, nombre):
+        self.__nombre = nombre
+        self.__ultMod = datetime.datetime.now()
+
+    def setDescripcion(self, descripcion):
+        self.__descripcion = descripcion
+        self.__ultMod = datetime.datetime.now()
+    
+
+
+    #getters
     def getPid(self)->int:
         return self.__pid
     

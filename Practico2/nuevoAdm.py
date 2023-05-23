@@ -7,11 +7,10 @@ class Admin:
         self.listaDeTareas = []
         self.__cargarLista()
         
-
-    def addTask(self, nombre):
+    #Añadir tarea
+    def addTask(self, nombre, descripcion):
         nuevoPid = 1
         flag = True
-        #print(self.listaDeTareas)
         while(flag):
             flag = False
             if(len(self.listaDeTareas)!= 0):
@@ -20,16 +19,20 @@ class Admin:
                         nuevoPid = random.randint(1,1000)
                         flag = True
                         break
-        nuevaTarea = Task(nuevoPid,nombre,None,None,None)
+        nuevaTarea = Task(nuevoPid,nombre, descripcion,None,None,None)
         self.listaDeTareas.append(nuevaTarea)
         self.__insertarTarea(nuevaTarea)
             
+
+    #Obtener una tarea
     def getTask(self, pid)->Task:
         for x in self.listaDeTareas:
             if(pid == Task(x).getPid()):
                 return x
 
-    def statusUpdate(self, pid, estado):
+
+    #Actualizar tareas
+    def statusUpdate(self, pid, estado, nombre, descripcion):
         aux = None
         for x in self.listaDeTareas:
             if( pid == x.getPid()):
@@ -38,13 +41,21 @@ class Admin:
         if(aux == None):
             raise Exception(f"El id {pid} no se encuentra en la lista de tareas.")
         else:
-            aux.cambiarEstado(estado)
-            self.__updateElement(aux.getPid(),aux.getEstado())
+            if(estado != None or nombre != ""):
+                aux.cambiarEstado(estado)
+            if(nombre != None or nombre != ""):
+                aux.setNombre(nombre)
+            if(descripcion != None or descripcion != ""):
+                aux.setDescripcion(descripcion)
+            self.__updateElementStatus(aux.getPid(),aux.getEstado())
             print("Actualizacion realizada con exito.")
 
-    def __updateElement(self, pid, estado):
+    def __updateElementStatus(self, pid, estado):
         db = TinyDB('db.json')
         db.update({"estado": estado, "ultMod": datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")}, Query().pid == pid)
+
+    
+
 
 
     def eliminarTarea(self, pid):
@@ -81,20 +92,3 @@ class Admin:
         db = TinyDB('db.json')
         print(tarea.toDic())
         db.insert(tarea.toDic())
-
-"""
-    def __updateElement(self, element):
-        db = TinyDB('db.json')
-        tarea = None
-        for x in self.listaDeTareas:
-            if(element.getPid()):
-                tarea = x
-
-        if(tarea == None):
-            raise Exception(f"El id {element.getPid()} no se encuentra en la lista de tareas.")
-
-        if(element.getNombre() != ""):
-            db.update({'nombre': element.getNombre(), "ultMod": datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")}, Query().pid == tarea.getPid())
-        if(element.getEstado() != 0):
-            db.update({"estado": element.getEstado(), "ultMod": datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")}, Query().pid == tarea.getPid())
-"""
