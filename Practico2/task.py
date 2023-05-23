@@ -25,13 +25,14 @@ class Task:
             self.__ultMod = datetime.datetime.strptime(ultMod, "%d-%m-%Y %H:%M:%S")
 
     def __str__(self)-> str:
-        return f"{self.__pid} - {self.__nombre} - Status: {self.__calcularEstado()} - Ultima modificación: {self.__calcularModificacion()}"
+        return f"{self.__pid} - {self.__nombre} - Status: {self.__calcularEstado()} - Ultima modificación: {self.__calcularModificacion()} \nDescripción: {self.__descripcion}"
 
     def toDic(self)->dict:
         return {
             'pid':self.__pid,
             'nombre':self.__nombre,
             'estado': self.__estado,
+            'descripcion': self.__descripcion,
             'fecInicio': self.__fecInicio.strftime("%d-%m-%Y %H:%M:%S"),
             'ultMod':self.__ultMod.strftime("%d-%m-%Y %H:%M:%S")
             }

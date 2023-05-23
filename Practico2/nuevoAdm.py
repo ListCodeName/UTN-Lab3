@@ -19,16 +19,27 @@ class Admin:
                         nuevoPid = random.randint(1,1000)
                         flag = True
                         break
-        nuevaTarea = Task(nuevoPid,nombre, descripcion,None,None,None)
+        nuevaTarea = Task(nuevoPid, nombre, descripcion, None, None, None)
         self.listaDeTareas.append(nuevaTarea)
-        self.__insertarTarea(nuevaTarea)
-            
+        #self.__insertarTarea(nuevaTarea)
+        
+    def __insertarTarea(self, tarea):
+        db = TinyDB('db.json')
+        print(tarea.toDic())
+        db.insert(tarea.toDic())
+
+
+
+
 
     #Obtener una tarea
     def getTask(self, pid)->Task:
         for x in self.listaDeTareas:
             if(pid == Task(x).getPid()):
                 return x
+
+
+
 
 
     #Actualizar tareas
@@ -41,13 +52,16 @@ class Admin:
         if(aux == None):
             raise Exception(f"El id {pid} no se encuentra en la lista de tareas.")
         else:
-            if(estado != None or nombre != ""):
-                aux.cambiarEstado(estado)
+            if(estado != None or estado != ""):
+                try:
+                    aux.cambiarEstado(int(estado))
+                except Exception as e:
+                    raise Exception(e)
             if(nombre != None or nombre != ""):
                 aux.setNombre(nombre)
             if(descripcion != None or descripcion != ""):
                 aux.setDescripcion(descripcion)
-            self.__updateElementStatus(aux.getPid(),aux.getEstado())
+    #        self.__updateElementStatus(aux.getPid(),aux.getEstado())
             print("Actualizacion realizada con exito.")
 
     def __updateElementStatus(self, pid, estado):
@@ -58,12 +72,14 @@ class Admin:
 
 
 
+    #Eliminar tarea
+
     def eliminarTarea(self, pid):
         aux = True
         for x in self.listaDeTareas:
             if(pid == x.getPid()):
                 aux = False
-                self.__deleteElement(x.getPid())
+                #self.__deleteElement(x.getPid())
                 self.listaDeTareas.remove(x)
                 print("Eliminacion realizada con exito.")
         
@@ -74,6 +90,11 @@ class Admin:
         db = TinyDB('db.json')
         db.remove(Query().pid == pid)
                 #self.__cargarLista()
+
+
+
+
+    #Listar tareas
 
     def taskList(self)->list:
         return self.listaDeTareas
@@ -86,9 +107,4 @@ class Admin:
                 self.listaDeTareas.append(Task(**x))
         else:
             print("Lista vacía")
-        
-
-    def __insertarTarea(self, tarea):
-        db = TinyDB('db.json')
-        print(tarea.toDic())
-        db.insert(tarea.toDic())
+    
