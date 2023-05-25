@@ -1,5 +1,5 @@
-from adm import Admin
-from task import Task
+from nuevoAdm import NewAdmin
+from taskEx import Task
 
 def listarTareas(listado):
     print("\n-------------- Lista de tareas ----------------")
@@ -18,7 +18,7 @@ def actualizarTarea(administrador):
     print("\n-------------- Actualizar tarea ----------------")
     while(True):
         try:
-            administrador.statusUpdate(int(input("Escriba el id: ")), input("Estado (1,0,-1): "), input("**Ingrese nuevo nombre: "), input("**Ingrese descripción: "))
+            administrador.statusUpdate(int(input("Escriba el id: ")), int(input("Estado (1,0,-1): ")), input("**Ingrese nuevo nombre: "), input("**Ingrese descripción: "))
             break
         except Exception as e:
             print(e, "\n")
@@ -30,7 +30,11 @@ def eliminarTarea(administrador):
     except Exception as e:
         print(e)
 
-adm = Admin()
+def salvarCambios(administrador):
+    administrador.redo()
+
+
+adm = NewAdmin()
 flag = True
 while(flag):
     print("\n---------- Menu ------------")
@@ -38,6 +42,7 @@ while(flag):
     print("[2] Agregar una tarea.")
     print("[3] Actualizar estado de una tarea.")
     print("[4] Eliminar una tarea.")
+    print("[5] Salvar cambios.")
     print("[0] Salir")
     flag = int(input(">>>"))
     if(flag == 1):
@@ -48,3 +53,5 @@ while(flag):
         actualizarTarea(adm)
     elif(flag == 4):
         eliminarTarea(adm)
+    elif(flag == 5):
+        salvarCambios(adm)

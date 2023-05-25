@@ -1,7 +1,5 @@
 import datetime
 
-#Crea una clase Tarea que tenga las siguientes propiedades: id, titulo, descripción, estado, creada y actualizada.
-
 class Task:
    
     def __init__ (self, pid, nombre, estado, descripcion, fecInicio, ultMod):
@@ -49,7 +47,6 @@ class Task:
         timestamp = str(self.__ultMod - self.__fecInicio) #0:00:00.002423
         artimestamp = timestamp.split(":")
         minutos = int(artimestamp[0])*60 + int(artimestamp[1])
-        print (minutos)
         if(minutos < 60):
             return f"{minutos} mins"
         else:
