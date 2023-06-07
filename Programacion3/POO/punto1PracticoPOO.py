@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton, QLabel, QFormLayout
 from PyQt5.QtGui import QLinearGradient, QColor
 
 class MyWindow(QWidget):
@@ -8,16 +8,18 @@ class MyWindow(QWidget):
         self.setWindowTitle("Mi Ventana")
         self.setGeometry(100, 100, 400, 300)
 
-        layout = QVBoxLayout(self)
+        layout = QFormLayout(self)
         
-        label1 = QLabel("Valor: ")
-        layout.addWidget(label1)
         
-        self.textField1 = QLineEdit()
+        self.label1 = QLabel("Valor: ")
+        layout.addWidget(self.label1)
+        
+        self.textField1 = QLineEdit(self)
+        
         layout.addWidget(self.textField1)
 
-        label2 = QLabel("Color: ")
-        layout.addWidget(label2)
+        self.label2 = QLabel("Color: ")
+        layout.addWidget(self.label2)
 
         self.text_field2 = QLineEdit()
         layout.addWidget(self.text_field2)
@@ -54,9 +56,25 @@ class MyWindow(QWidget):
         gradient.setColorAt(1, QColor(150, 150, 150))
         
 
-        button = QPushButton("Guardar")
+        button = QPushButton("Calcular")
         button.clicked.connect(self.guardar_contenido)
         layout.addWidget(button)
+
+        button.setStyleSheet("""
+            QPushButton{
+                max-width: 200px;
+                background-color: #444;
+                border: 1px solid #333;
+                color: #FAFAFA;
+                padding: 10px 0px;
+                font-size: 15px;
+                
+            }
+
+            QPushButton:hover{
+                background-color: #777;
+            }
+        """)
 
     def guardar_contenido(self):
         
